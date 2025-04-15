@@ -38,3 +38,15 @@ TEST_F(DeviceDriverTestFixture, CheckRead) {
 
   EXPECT_EQ(driver.read(address), data);
 }
+
+TEST_F(DeviceDriverTestFixture, ThrowsExceptionIfWriteIsImpossible) {
+  EXPECT_CALL(deviceMock, read(address)).WillRepeatedly(Return(0x5));
+  EXPECT_THROW({ driver.write(address, data); }, WriteFailException);
+}
+TEST_F(DeviceDriverTestFixture, CheckWriteIsPossible) {
+  unsigned char data = 1;
+  EXPECT_CALL(deviceMock, read(address)).WillRepeatedly(Return(0xFF));
+  EXPECT_CALL(deviceMock, write(address, data)).Times(1);
+
+  driver.write(address, data);
+}
