@@ -9,19 +9,22 @@ class FlashMemoryDeviceMock : public FlashMemoryDevice {
   MOCK_METHOD(void, write, (long, unsigned char), (override));
 };
 
-TEST(DeviceDriverTest, ReadIsCalledFiveTimes) {
+class DeviceDriverTestFixture : public Test {
+ public:
   FlashMemoryDeviceMock deviceMock;
+  DeviceDriver driver;
+  long address = 0x4;
+  DeviceDriverTestFixture() : driver(&deviceMock) {}
+};
+
+TEST_F(DeviceDriverTestFixture, ReadIsCalledFiveTimes) {
   EXPECT_CALL(deviceMock, read).Times(5);
 
-  DeviceDriver driver(&deviceMock);
-  long address = 0x4;
   driver.read(address);
 }
 
-TEST(DeviceDriverTest, ThrowsExceptionIfReadReturnsDifferentValuesInFiveCalls) {
-  FlashMemoryDeviceMock deviceMock;
-  DeviceDriver driver(&deviceMock);
-  long address = 0x4;
+TEST_F(DeviceDriverTestFixture,
+       ThrowsExceptionIfReadReturnsDifferentValuesInFiveCalls) {
   EXPECT_CALL(deviceMock, read(address))
       .WillOnce(Return(5))
       .WillRepeatedly(Return(10));
