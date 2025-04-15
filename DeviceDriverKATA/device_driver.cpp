@@ -1,14 +1,15 @@
 #include "device_driver.h"
+#include "exception"
 
-DeviceDriver::DeviceDriver(FlashMemoryDevice *hardware)
+DeviceDriver::DeviceDriver(FlashMemoryDevice* hardware)
     : m_hardware(hardware) {}
 
 int DeviceDriver::read(long address) {
   // TODO: implement this method properly
   int result = (m_hardware->read(address));
-  for (int i =0; i<4; i++){
+  for (int i = 0; i < 4; i++) {
     int temp = (m_hardware->read(address));
-    if (temp != result) return 0;
+    if (temp != result) throw ReadFailException();
   }
 }
 
