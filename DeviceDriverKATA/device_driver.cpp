@@ -1,5 +1,4 @@
 #include "device_driver.h"
-
 #include "exception"
 
 DeviceDriver::DeviceDriver(FlashMemoryDevice* hardware)
