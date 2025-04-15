@@ -11,6 +11,7 @@ int DeviceDriver::read(long address) {
     int temp = (m_hardware->read(address));
     if (temp != result) throw ReadFailException();
   }
+  return result;
 }
 
 void DeviceDriver::write(long address, int data) {
