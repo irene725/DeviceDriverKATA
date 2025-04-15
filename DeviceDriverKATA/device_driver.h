@@ -1,5 +1,6 @@
 #pragma once
 #include "flash_memory_device.h"
+#include <exception>
 
 class DeviceDriver {
  public:
@@ -9,4 +10,8 @@ class DeviceDriver {
 
  protected:
   FlashMemoryDevice *m_hardware;
+};
+class ReadFailException : public std::exception {
+ public:
+  char const *what() const override { return "ReadFailException"; }
 };
