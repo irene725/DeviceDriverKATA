@@ -14,6 +14,7 @@ class DeviceDriverTestFixture : public Test {
   FlashMemoryDeviceMock deviceMock;
   DeviceDriver driver;
   long address = 0x4;
+  unsigned char data = 10;
   DeviceDriverTestFixture() : driver(&deviceMock) {}
 };
 
@@ -27,7 +28,13 @@ TEST_F(DeviceDriverTestFixture,
        ThrowsExceptionIfReadReturnsDifferentValuesInFiveCalls) {
   EXPECT_CALL(deviceMock, read(address))
       .WillOnce(Return(5))
-      .WillRepeatedly(Return(10));
+      .WillRepeatedly(Return(data));
 
   EXPECT_THROW({ driver.read(address); }, ReadFailException);
+}
+
+TEST_F(DeviceDriverTestFixture, CheckRead) {
+  EXPECT_CALL(deviceMock, read(address)).WillRepeatedly(Return(data));
+
+  EXPECT_EQ(driver.read(address), data);
 }
